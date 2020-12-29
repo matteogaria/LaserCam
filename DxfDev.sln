@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30621.155
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geometry", "Geometry\Geometry.csproj", "{B2B5FE9E-6639-4BEF-88B2-E47BCF672151}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LaserCam", "LaserCam\LaserCam.csproj", "{05825D3A-D3D3-4670-9231-3E89F14851C1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DxfTools", "DxfTools\DxfTools.csproj", "{6D46AF25-28BE-44B5-82A9-0AE9BD5EBA20}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GCode", "GCode\GCode.csproj", "{97627697-88E9-4214-A2AA-45CA18C40B02}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GcodeTests", "GcodeTests\GcodeTests.csproj", "{194C4B36-F22A-451C-90AE-8C566247F107}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DxfTests", "DxfTests\DxfTests.csproj", "{D8BDB937-1425-4B73-9BF7-4F1E2FAEC630}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B2B5FE9E-6639-4BEF-88B2-E47BCF672151}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2B5FE9E-6639-4BEF-88B2-E47BCF672151}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2B5FE9E-6639-4BEF-88B2-E47BCF672151}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2B5FE9E-6639-4BEF-88B2-E47BCF672151}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05825D3A-D3D3-4670-9231-3E89F14851C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05825D3A-D3D3-4670-9231-3E89F14851C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05825D3A-D3D3-4670-9231-3E89F14851C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05825D3A-D3D3-4670-9231-3E89F14851C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D46AF25-28BE-44B5-82A9-0AE9BD5EBA20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D46AF25-28BE-44B5-82A9-0AE9BD5EBA20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D46AF25-28BE-44B5-82A9-0AE9BD5EBA20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D46AF25-28BE-44B5-82A9-0AE9BD5EBA20}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97627697-88E9-4214-A2AA-45CA18C40B02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97627697-88E9-4214-A2AA-45CA18C40B02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97627697-88E9-4214-A2AA-45CA18C40B02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97627697-88E9-4214-A2AA-45CA18C40B02}.Release|Any CPU.Build.0 = Release|Any CPU
+		{194C4B36-F22A-451C-90AE-8C566247F107}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{194C4B36-F22A-451C-90AE-8C566247F107}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{194C4B36-F22A-451C-90AE-8C566247F107}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{194C4B36-F22A-451C-90AE-8C566247F107}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8BDB937-1425-4B73-9BF7-4F1E2FAEC630}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8BDB937-1425-4B73-9BF7-4F1E2FAEC630}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8BDB937-1425-4B73-9BF7-4F1E2FAEC630}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8BDB937-1425-4B73-9BF7-4F1E2FAEC630}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C7580CF0-9493-434A-AFF6-DCF3E9C8EA40}
+	EndGlobalSection
+EndGlobal

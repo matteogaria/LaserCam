@@ -1,0 +1,56 @@
+[
+  {
+	"Name": "hardply-3mm",
+	"DecimalPlaces": 3,
+	"PointTolerance": 0.001,
+	"Parameters": [
+	  {
+		"Layer": "cut",
+		"SplitGeometries": true,
+		"SectionLength": 30,
+		"SectionTolerance": 5,
+		"FeedRate": 300,
+		"Power": 2500,
+		"Passes": 7,
+		"Mode": "Fixed"
+	  },
+	  {
+		"Layer": "engraving",
+		"SplitGeometries": false,
+		"SectionLength": 0,
+		"SectionTolerance": 0,
+		"FeedRate": 600,
+		"Power": 2500,
+		"Passes": 1,
+		"Mode": "Dynamic"
+	  }
+	]
+  },
+  {
+	"Name": "softply-4mm",
+	"DecimalPlaces": 3,
+	"PointTolerance": 0.001,
+	"Parameters": [
+	  {
+		"Layer": "cut",
+		"SplitGeometries": true,
+		"SectionLength": 30,
+		"SectionTolerance": 5,
+		"FeedRate": 450,
+		"Power": 2500,
+		"Passes": 1,
+		"Mode": "Fixed"
+	  },
+	  {
+		"Layer": "engraving",
+		"SplitGeometries": false,
+		"SectionLength": 0,
+		"SectionTolerance": 0,
+		"FeedRate": 800,
+		"Power": 2500,
+		"Passes": 1,
+		"Mode": "Dynamic"
+	  }
+	]
+  }
+]
