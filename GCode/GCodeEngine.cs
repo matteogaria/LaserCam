@@ -46,6 +46,7 @@ namespace GCode
                 sb.AppendLine();
             }
 
+            Console.WriteLine($"Rapid move distance: {totalRapidMoveDistance}");
         }
 
         private void BuildShape(Shape shape, StringBuilder sb)
