@@ -1,48 +1,50 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net5.0</TargetFramework>
-    <Version>0.1.0</Version>
-    <Authors>Matteo Garia</Authors>
-    <Description>A 2D laser engraving/cutting oriented CAM software</Description>
-    <Copyright>Copyright (c) 2020 Matteo Garia</Copyright>
-    <PackageLicenseExpression></PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/matteogaria/LaserCam</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/matteogaria/LaserCam</RepositoryUrl>
-    <RepositoryType>GitHub</RepositoryType>
-    <AssemblyVersion>0.0.1.0</AssemblyVersion>
-    <FileVersion>0.0.1.0</FileVersion>
-    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net6.0</TargetFramework>
+		<Nullable>disable</Nullable>
+		<Version>0.1.0</Version>
+		<Authors>Matteo Garia</Authors>
+		<Description>A 2D laser engraving/cutting oriented CAM software</Description>
+		<Copyright>Copyright (c) 2020 Matteo Garia</Copyright>
+		<PackageLicenseExpression></PackageLicenseExpression>
+		<PackageProjectUrl>https://github.com/matteogaria/LaserCam</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/matteogaria/LaserCam</RepositoryUrl>
+		<RepositoryType>GitHub</RepositoryType>
+		<AssemblyVersion>0.0.1.0</AssemblyVersion>
+		<FileVersion>0.0.1.0</FileVersion>
+		<PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <NoWarn>1701;1702;1591</NoWarn>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<NoWarn>1701;1702;1591</NoWarn>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="NLog.config" />
-    <None Include="..\LICENSE.md">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Remove="NLog.config" />
+		<None Include="..\LICENSE.md">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="netDxf.netstandard" Version="2.4.0" />
-    <PackageReference Include="System.CommandLine" Version="2.0.0-beta1.20574.7" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="netDxf.netstandard" Version="2.4.0" />
+		<PackageReference Include="Sharprompt" Version="2.4.2" />
+		<PackageReference Include="System.CommandLine" Version="2.0.0-beta1.20574.7" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\DxfTools\DxfTools.csproj" />
-    <ProjectReference Include="..\GCode\GCode.csproj" />
-    <ProjectReference Include="..\Geometry\Geometry.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\DxfTools\DxfTools.csproj" />
+		<ProjectReference Include="..\GCode\GCode.csproj" />
+		<ProjectReference Include="..\Geometry\Geometry.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Update="profiles.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Update="profiles.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
 
 </Project>

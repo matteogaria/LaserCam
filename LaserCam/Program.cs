@@ -8,23 +8,31 @@ using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.Reflection;
 
+
 namespace LaserCam
 {
     class Program
     {
         static void Main(string[] args)
         {
-            RootCommand cmd = new RootCommand
+            WindowsFileDialog.ShowOpenFileDialog("Select file", "DXF drawing (*.dxf)", "*.dxf");
+
+            if (args.Length > 0)
             {
-                new Option<string>(new[]{ "--input" , "-i" }, "path to input dxf file").AsRequired(),
-                new Option<string>(new[]{ "--output" , "-o" }, "path to output gcode file").AsRequired(),
-                new Option<string>(new[]{ "--profile" , "-p" }, "profile").AsRequired(),
-                new Option("--no-optimizer", "disables travel path optimizer"),
+                RootCommand cmd = new RootCommand
+                {
+                    new Option<string>(new[]{ "--input" , "-i" }, "path to input dxf file").AsRequired(),
+                    new Option<string>(new[]{ "--output" , "-o" }, "path to output gcode file").AsRequired(),
+                    new Option<string>(new[]{ "--profile" , "-p" }, "profile").AsRequired(),
+                    new Option("--no-optimizer", "disables travel path optimizer"),
 
-                new Command("--license", "Get license information").WithHandler(nameof(ShowLicenseInfo))
-            }.WithHandler(nameof(RunCam));
+                    new Command("--license", "Get license information").WithHandler(nameof(ShowLicenseInfo))
+                }.WithHandler(nameof(RunCam));
 
-            cmd.Invoke(args);
+                cmd.Invoke(args);
+            }
+            else
+                new Interactive().Run();
         }
 
         private static void RunCam( string input, string output,string profile, bool noOptimizer, IConsole console)

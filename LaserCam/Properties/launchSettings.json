@@ -1,8 +1,7 @@
 {
   "profiles": {
     "LaserCam": {
-      "commandName": "Project",
-      "commandLineArgs": "-i test.dxf -o test.gcode -p softply-4mm"
+      "commandName": "Project"
     }
   }
 }
