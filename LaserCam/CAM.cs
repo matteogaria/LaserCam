@@ -4,12 +4,10 @@
 // This program is distributed in the hope that it will be useful, but  WITHOUT ANY WARRANTY; without even the implied warranty of  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GPLv3  General Public License for more details.
 // You should have received a copy of the GNU General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 using DxfTools;
 using GCode;
@@ -19,27 +17,15 @@ namespace LaserCam
 {
     public class CAM
     {
-        List<CamSettings> loadedSettings;
-        public CAM(string profiles)
+        public static bool Run(CamSettings settings, string inputFile, string outputFile, bool disableOptimizer)
         {
-            loadedSettings = CamSettings.Load(profiles);
-        }
-
-        public bool Run(string inputFile, string outputFile, string profile, bool disableOptimizer)
-        {
-            CamSettings currentSettings = loadedSettings.Where(s => s.Name.ToLower() == profile).SingleOrDefault();
-            if (currentSettings == null)
-            {
-                return false;
-            }
-
             Dxf dxf = new Dxf(inputFile);
 
             IEnumerable<GeometryObject> geometries = dxf.Parse();
 
-            IEnumerable<Shape> shapes = Shape.CreateShapes(geometries, currentSettings.GetShapeSettings(), !disableOptimizer).ToList();
+            IEnumerable<Shape> shapes = Shape.CreateShapes(geometries, settings.GetShapeSettings(), !disableOptimizer).ToList();
 
-            GCodeEngine engine = new GCodeEngine(currentSettings.GetGCodeSettings());
+            GCodeEngine engine = new GCodeEngine(settings.GetGCodeSettings());
 
             StringBuilder sb = new();
             engine.Run(shapes, sb);

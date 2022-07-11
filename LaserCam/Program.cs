@@ -6,8 +6,9 @@
 
 using System.CommandLine;
 using System.CommandLine.Invocation;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
-
 
 namespace LaserCam
 {
@@ -15,8 +16,6 @@ namespace LaserCam
     {
         static void Main(string[] args)
         {
-            WindowsFileDialog.ShowOpenFileDialog("Select file", "DXF drawing (*.dxf)", "*.dxf");
-
             if (args.Length > 0)
             {
                 RootCommand cmd = new RootCommand
@@ -32,15 +31,19 @@ namespace LaserCam
                 cmd.Invoke(args);
             }
             else
-                new Interactive().Run();
+                new Interactive("profiles.json").Run();
         }
 
         private static void RunCam( string input, string output,string profile, bool noOptimizer, IConsole console)
         {
-            CAM cam = new CAM("profiles.json");
-            cam.Run(input, output, profile, noOptimizer);
+            List<CamSettings> settings = CamSettings.Load("profiles.json");
+            CamSettings selectedSettings = settings.Where(s => s.Name.ToLower() == profile.ToLower()).SingleOrDefault();
+            if(selectedSettings == null)
+                console.Error.Write($"No profile is found with name {profile}");
+            else
+                CAM.Run(selectedSettings, input, output, noOptimizer);
 
-            console.Out.Write("Operazione completata!\r\n");
+            console.Out.Write("Conversion done!\r\n");
         }
 
         private static void ShowLicenseInfo(IConsole console)
@@ -51,9 +54,7 @@ namespace LaserCam
                 "This program is free software; you can redistribute it and/or modify  it under the terms of the GPLv3 General Public License as published by  the Free Software Foundation; either version 3 of the License, or (at  your option) any later version.\r\nThis program is distributed in the hope that it will be useful, but  WITHOUT ANY WARRANTY; without even the implied warranty of  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GPLv3  General Public License for more details.\r\nYou should have received a copy of the GNU General Public License along with this program.  If not, see https://www.gnu.org/licenses/.";
 
             console.Out.Write(license);
-
         }
-
     }
 
     public static class Ext

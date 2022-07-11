@@ -6,7 +6,7 @@ namespace LaserCam
     public static class WindowsFileDialog
     {
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
-        public struct OpenFileName
+        internal struct OpenFileName
         {
             public int lStructSize;
             public IntPtr hwndOwner;
