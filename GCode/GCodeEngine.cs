@@ -151,26 +151,18 @@ namespace GCode
 
         private void BuildLaser(LaserMode mode, int power)
         {
-            GCodeObject command = null;
             if (currentMode == mode && currentPower == power)
                 return;
 
-            if (mode == LaserMode.Off)
+            GCodeObject command = mode switch
             {
-                command = new LaserOff();
-            }
-            else if (mode == LaserMode.Fixed)
-            {
-                command = new LaserOnFixed(power);
-            }
-            else if (mode == LaserMode.Dynamic)
-            {
-                command = new LaserOnDynamic(power);
-            }
+                LaserMode.Fixed => new LaserOnFixed(power),
+                LaserMode.Dynamic => new LaserOnDynamic(power),
+                LaserMode.Off or _ => new LaserOff()
+            };
 
             currentMode = mode;
             currentPower = power;
-
             generatedGCode.Add(command);
         }
 
