@@ -31,7 +31,9 @@ namespace LaserCam
                 ("configured output", () => $"C:\\{inputFileClean}.gcode"),
                 ("same as input", () => Path.Combine(inputPath, $"{inputFileClean}.gcode")),
                 ("use dialog", () => WindowsFileDialog.ShowSaveFileDialog("Save as...", "Gcode File (*.gcode)", "*.gcode")));
+            bool optimizer = Prompt.Confirm("Disable optimizer?", false);
 
+            CAM.Run(choosenSettings, inputFile, outputFile, optimizer);
             Console.WriteLine("Bye bye...");
         }
 
