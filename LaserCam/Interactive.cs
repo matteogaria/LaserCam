@@ -33,7 +33,9 @@ namespace LaserCam
                 ("use dialog", () => WindowsFileDialog.ShowSaveFileDialog("Save as...", "Gcode File (*.gcode)", "*.gcode")));
             bool optimizer = Prompt.Confirm("Disable optimizer?", false);
 
-            CAM.Run(choosenSettings, inputFile, outputFile, optimizer);
+            bool ok =CAM.Run(choosenSettings, inputFile, outputFile, optimizer, out string error);
+            if (!ok)
+                Console.WriteLine($"ERROR: {error}");
             Console.WriteLine("Bye bye...");
         }
 

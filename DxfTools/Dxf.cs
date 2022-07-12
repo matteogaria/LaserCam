@@ -5,7 +5,6 @@
 // You should have received a copy of the GNU General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System;
-using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -18,22 +17,33 @@ namespace DxfTools
 {
     public class Dxf
     {
-        private readonly DxfDocument doc;
+        private DxfDocument doc;
+        private readonly string path;
 
-        public Dxf(string file)
+        public Dxf(string path)
+        {
+            this.path = path;
+        }
+
+        public bool Load(out string error)
         {
             try
             {
-                doc = DxfDocument.Load(file);
+                error = string.Empty;
+                doc = DxfDocument.Load(path);
+                return true;
             }
-            catch (DxfVersionNotSupportedException versionEx)
+            catch (DxfVersionNotSupportedException)
             {
-                throw new IOException($"dxf file version too old: only AutoCad2000 and higher are supported", versionEx);
+                error = "dxf file version too old: only AutoCad2000 and higher are supported";
             }
-            catch(Exception)
+            catch (Exception ex)
             {
-                throw;
+                error = ex.Message;
             }
+
+            return false;
+
         }
 
         public IEnumerable<GeometryObject> Parse()

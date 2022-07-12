@@ -38,10 +38,13 @@ namespace LaserCam
         {
             List<CamSettings> settings = CamSettings.Load("profiles.json");
             CamSettings selectedSettings = settings.Where(s => s.Name.ToLower() == profile.ToLower()).SingleOrDefault();
-            if(selectedSettings == null)
+            if (selectedSettings == null)
                 console.Error.Write($"No profile is found with name {profile}");
             else
-                CAM.Run(selectedSettings, input, output, noOptimizer);
+            {
+                bool ok = CAM.Run(selectedSettings, input, output, noOptimizer, out string error);
+                console.Error.Write(error);
+            }
 
             console.Out.Write("Conversion done!\r\n");
         }

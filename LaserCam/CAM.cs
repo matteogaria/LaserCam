@@ -17,14 +17,16 @@ namespace LaserCam
 {
     public class CAM
     {
-        public static bool Run(CamSettings settings, string inputFile, string outputFile, bool disableOptimizer)
+        public static bool Run(CamSettings settings, string inputFile, string outputFile, bool disableOptimizer, out string error)
         {
+            error = string.Empty;
             Dxf dxf = new Dxf(inputFile);
 
+            if (!dxf.Load(out error))
+                return false;
+
             IEnumerable<GeometryObject> geometries = dxf.Parse();
-
             IEnumerable<Shape> shapes = Shape.CreateShapes(geometries, settings.GetShapeSettings(), !disableOptimizer).ToList();
-
             GCodeEngine engine = new GCodeEngine(settings.GetGCodeSettings());
 
             StringBuilder sb = new();
