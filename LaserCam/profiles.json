@@ -5,7 +5,7 @@
 	"PointTolerance": 0.001,
 	"Parameters": [
 	  {
-		"Layer": "cut",
+		"Layer": "0",
 		"SplitGeometries": true,
 		"SectionLength": 30,
 		"SectionTolerance": 5,

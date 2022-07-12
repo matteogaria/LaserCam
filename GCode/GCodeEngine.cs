@@ -30,6 +30,7 @@ namespace GCode
         private readonly List<GCodeLayerSettings> layerSettings;
         private readonly int decimalPlaces;
         private double totalRapidMoveDistance = 0;
+        private double totalCuttingDistance = 0;
 
         private List<GCodeObject> generatedGCode = new();
 
@@ -46,7 +47,8 @@ namespace GCode
                 sb.AppendLine();
             }
 
-            Console.WriteLine($"Rapid move distance: {totalRapidMoveDistance}");
+            Console.WriteLine($"Cutting length: {totalCuttingDistance:N3}");
+            Console.WriteLine($"Rapid move lenght: {totalRapidMoveDistance:N3}");
         }
 
         private void BuildShape(Shape shape, StringBuilder sb)
@@ -94,6 +96,7 @@ namespace GCode
             {
                 GeometryObject geo = reverse ? input.Last() : input.First();
                 input.Remove(geo);
+                totalCuttingDistance += geo.Length;
                 if (geo is Line l)
                     BuildLine(l, reverse, settings, sb);
                 else if (geo is Arc a)
