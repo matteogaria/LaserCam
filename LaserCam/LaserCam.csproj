@@ -22,7 +22,9 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<None Remove="logo.txt" />
 		<None Remove="NLog.config" />
+		<EmbeddedResource Include="logo.txt" />
 		<None Include="..\LICENSE.md">
 			<Pack>True</Pack>
 			<PackagePath></PackagePath>

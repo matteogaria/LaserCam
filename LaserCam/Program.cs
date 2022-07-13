@@ -58,7 +58,7 @@ namespace LaserCam
 
             console.Out.Write(license);
         }
-    }
+}
 
     public static class Ext
     {

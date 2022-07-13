@@ -16,8 +16,16 @@ namespace LaserCam
         public Interactive(string settingsFilename)
         {
             settings = CamSettings.Load(settingsFilename);
+                string logo =
+                    " ______________________________________________________________\r\n" +
+                    "        _______ _______ _______  ______ _______ _______ _______\r\n" +
+                    " |      |_____| |______ |______ |_____/ |       |_____| |  |  |\r\n" +
+                    " |_____ |     | ______| |______ |    \\_ |_____  |     | |  |  |\r\n" +
+                    " ______________________________________________________________";
 
+              Console.WriteLine(logo);
         }
+
         public void Run()
         {
             if (!OpenFile(out string inputFile))
