@@ -9,6 +9,8 @@ using System.CommandLine.Invocation;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.IO;
+using System;
 
 namespace LaserCam
 {
@@ -16,6 +18,9 @@ namespace LaserCam
     {
         static void Main(string[] args)
         {
+
+            bool dir = Directory.Exists("C:\\cam\\test.txt");
+            bool file = File.Exists("C:\\cam\\test.txt");
             if (args.Length > 0)
             {
                 RootCommand cmd = new RootCommand
@@ -32,8 +37,10 @@ namespace LaserCam
             }
             else
             {
-                bool ok = new Interactive("profiles.json").Run(out string error);
+                bool ok = new Interactive("profiles.json").Run();
             }
+
+            Console.WriteLine("Bye bye...");
         }
 
         private static void RunCam(string input, string output, string profile, bool noOptimizer, IConsole console)

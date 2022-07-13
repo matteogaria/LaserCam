@@ -26,41 +26,56 @@ namespace LaserCam
 
         }
 
-        public bool Run(out string error)
+        public bool Run()
         {
-            error = string.Empty;
             configuration = LaserCamConfiguration.Load(settingsFilename);
             if (configuration == null || configuration.CamSettings.Count == 0)
             {
-                error = "Configuration not found or broken";
+                Console.WriteLine("ERROR: Configuration not found or broken");
                 return false;
             }
 
             if (!OpenFile(out string inputFile))
             {
-                error = "No file given";
+                Console.WriteLine("ERROR: No file given");
                 return false;
             }
-
-            CamSettingsModel choosenSettings = Prompt.Select("Choose the desired profile", configuration.CamSettings, defaultValue: configuration.CamSettings[0], textSelector: s => s.Name);
-
             string inputFileClean = Path.GetFileNameWithoutExtension(inputFile);
             string inputPath = Path.GetDirectoryName(inputFile);
+
+            Console.WriteLine($"File selected: {inputFile}");
+            CamSettingsModel choosenSettings = Prompt.Select("Please choose the desired profile", configuration.CamSettings, defaultValue: configuration.CamSettings[0], textSelector: s => s.Name);
+            bool optimizer = Prompt.Confirm("Disable travel path optimizer?", false);
+
+
             string outputFile = Select("Choose where to save the gcode",
-                ("configured output", () => GetDefaultOutputName(inputFileClean)),
+                ("configured output", () => PrepareDefaultOutput(inputFileClean)),
 
                 ("same as input", () => Path.Combine(inputPath, $"{inputFileClean}.{configuration.OutputExtension}")),
 
                 ("use dialog", () => WindowsFileDialog.ShowSaveFileDialog("Save as...", $"Gcode (*.{configuration.OutputExtension})", $"*.{configuration.OutputExtension}")));
 
-            bool optimizer = Prompt.Confirm("Disable optimizer?", false);
+            bool ok = CAM.Run(choosenSettings, inputFile, outputFile, optimizer, out string error);
 
-            return CAM.Run(choosenSettings, inputFile, outputFile, optimizer, out error);
+            if (ok)
+                Console.WriteLine($"Generated toolpath saved in {outputFile}");
+            else
+                Console.WriteLine($"ERROR: {error}");
 
-            string GetDefaultOutputName(string name)
-                => File.GetAttributes(configuration.DefaultOutput).HasFlag(FileAttributes.Directory) ?
-                Path.Combine(configuration.DefaultOutput, $"{name}.{configuration.OutputExtension}") :
-                configuration.DefaultOutput;
+            return ok;
+
+            string PrepareDefaultOutput(string name)
+            {
+                string path = Path.HasExtension(configuration.DefaultOutput) ?
+                configuration.DefaultOutput :
+                Path.Combine(configuration.DefaultOutput, $"{name}.{configuration.OutputExtension}");
+
+                string dir = Path.GetDirectoryName(path);
+                if (!Directory.Exists(dir))
+                    Directory.CreateDirectory(dir);
+
+                return path;
+            }
         }
 
         private bool OpenFile(out string path)
