@@ -21,7 +21,7 @@ namespace LaserCam
                 RootCommand cmd = new RootCommand
                 {
                     new Option<string>(new[]{ "--input" , "-i" }, "path to input dxf file").AsRequired(),
-                    new Option<string>(new[]{ "--output" , "-o" }, "path to output gcode file").AsRequired(),
+                    new Option<string>(new[]{ "--output" , "-o" }, "path to output gcode file"),
                     new Option<string>(new[]{ "--profile" , "-p" }, "profile").AsRequired(),
                     new Option("--no-optimizer", "disables travel path optimizer"),
 
@@ -31,13 +31,15 @@ namespace LaserCam
                 cmd.Invoke(args);
             }
             else
-                new Interactive("profiles.json").Run();
+            {
+                bool ok = new Interactive("profiles.json").Run(out string error);
+            }
         }
 
-        private static void RunCam( string input, string output,string profile, bool noOptimizer, IConsole console)
+        private static void RunCam(string input, string output, string profile, bool noOptimizer, IConsole console)
         {
-            List<CamSettings> settings = CamSettings.Load("profiles.json");
-            CamSettings selectedSettings = settings.Where(s => s.Name.ToLower() == profile.ToLower()).SingleOrDefault();
+            LaserCamConfiguration settings = LaserCamConfiguration.Load("profiles.json");
+            CamSettingsModel selectedSettings = settings.CamSettings.Where(s => s.Name.ToLower() == profile.ToLower()).SingleOrDefault();
             if (selectedSettings == null)
                 console.Error.Write($"No profile is found with name {profile}");
             else
@@ -58,7 +60,7 @@ namespace LaserCam
 
             console.Out.Write(license);
         }
-}
+    }
 
     public static class Ext
     {

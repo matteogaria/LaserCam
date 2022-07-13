@@ -4,18 +4,55 @@
 // This program is distributed in the hope that it will be useful, but  WITHOUT ANY WARRANTY; without even the implied warranty of  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GPLv3  General Public License for more details.
 // You should have received a copy of the GNU General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using GCode.Models;
-using Geometry.Entities;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Linq;
+using System.Collections.Generic;
+
+using GCode.Models;
+using Geometry.Entities;
 
 namespace LaserCam
 {
-    public class CamSettings
+    public class LaserCamConfiguration
+    {
+        public string DefaultOutput { get; set; }
+        public string OutputExtension { get; set; }
+
+        public List<CamSettingsModel> CamSettings { get; set; } = new();
+
+        public static LaserCamConfiguration Load(string filename)
+        {
+            var options = new JsonSerializerOptions
+            {
+                WriteIndented = true,
+                Converters ={
+                    new JsonStringEnumConverter()
+                }
+            };
+
+            string content = File.ReadAllText(filename);
+            LaserCamConfiguration settings = JsonSerializer.Deserialize<LaserCamConfiguration>(content, options);
+            return settings;
+        }
+
+        public void Save(string filename)
+        {
+            var options = new JsonSerializerOptions
+            {
+                WriteIndented = true,
+                Converters ={
+                    new JsonStringEnumConverter()
+                }
+            };
+
+            string content = JsonSerializer.Serialize(this, options);
+            File.WriteAllText(filename, content);
+        }
+    }
+
+    public class CamSettingsModel
     {
         public string Name { get; set; }
         public int DecimalPlaces { get; set; }
@@ -51,35 +88,6 @@ namespace LaserCam
                 PointTolerance = this.PointTolerance,
                 Ordered = true
             });
-        }
-
-        public static List<CamSettings> Load(string filename)
-        {
-            var options = new JsonSerializerOptions
-            {
-                WriteIndented = true,
-                Converters ={
-                    new JsonStringEnumConverter()
-                }
-            };
-
-            string content = File.ReadAllText(filename);
-            List<CamSettings> settings = JsonSerializer.Deserialize<List<CamSettings>>(content, options);
-            return settings;
-        }
-
-        public static void Save(string filename, IEnumerable<CamSettings> settings)
-        {
-            var options = new JsonSerializerOptions
-            {
-                WriteIndented = true,
-                Converters ={
-                    new JsonStringEnumConverter()
-                }
-            };
-
-            string content = JsonSerializer.Serialize(settings, options);
-            File.WriteAllText(filename, content);
         }
     }
 

@@ -17,7 +17,7 @@ namespace LaserCam
 {
     public class CAM
     {
-        public static bool Run(CamSettings settings, string inputFile, string outputFile, bool disableOptimizer, out string error)
+        public static bool Run(CamSettingsModel settings, string inputFile, string outputFile, bool disableOptimizer, out string error)
         {
             error = string.Empty;
             Dxf dxf = new Dxf(inputFile);

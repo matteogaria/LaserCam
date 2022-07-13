@@ -1,50 +1,66 @@
-﻿using Sharprompt;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+
+using Sharprompt;
 
 namespace LaserCam
 {
     public class Interactive
     {
-        private readonly List<CamSettings> settings;
+        private LaserCamConfiguration configuration;
+        private readonly string settingsFilename;
+
         public Interactive(string settingsFilename)
         {
-            settings = CamSettings.Load(settingsFilename);
-                string logo =
-                    " ______________________________________________________________\r\n" +
-                    "        _______ _______ _______  ______ _______ _______ _______\r\n" +
-                    " |      |_____| |______ |______ |_____/ |       |_____| |  |  |\r\n" +
-                    " |_____ |     | ______| |______ |    \\_ |_____  |     | |  |  |\r\n" +
-                    " ______________________________________________________________";
+            this.settingsFilename = settingsFilename;
+            string logo =
+                " ______________________________________________________________\r\n" +
+                "        _______ _______ _______  ______ _______ _______ _______\r\n" +
+                " |      |_____| |______ |______ |_____/ |       |_____| |  |  |\r\n" +
+                " |_____ |     | ______| |______ |    \\_ |_____  |     | |  |  |\r\n" +
+                " ______________________________________________________________";
 
-              Console.WriteLine(logo);
+            Console.WriteLine(logo);
+
+
         }
 
-        public void Run()
+        public bool Run(out string error)
         {
-            if (!OpenFile(out string inputFile))
-                return;
+            error = string.Empty;
+            configuration = LaserCamConfiguration.Load(settingsFilename);
+            if (configuration == null || configuration.CamSettings.Count == 0)
+            {
+                error = "Configuration not found or broken";
+                return false;
+            }
 
-            CamSettings choosenSettings = Prompt.Select("Choose the desired profile", settings, defaultValue: settings[0], textSelector: s => s.Name);
+            if (!OpenFile(out string inputFile))
+            {
+                error = "No file given";
+                return false;
+            }
+
+            CamSettingsModel choosenSettings = Prompt.Select("Choose the desired profile", configuration.CamSettings, defaultValue: configuration.CamSettings[0], textSelector: s => s.Name);
 
             string inputFileClean = Path.GetFileNameWithoutExtension(inputFile);
             string inputPath = Path.GetDirectoryName(inputFile);
             string outputFile = Select("Choose where to save the gcode",
-                ("configured output", () => $"C:\\{inputFileClean}.gcode"),
-                ("same as input", () => Path.Combine(inputPath, $"{inputFileClean}.gcode")),
-                ("use dialog", () => WindowsFileDialog.ShowSaveFileDialog("Save as...", "Gcode File (*.gcode)", "*.gcode")));
+                ("configured output", () => GetDefaultOutputName(inputFileClean)),
+
+                ("same as input", () => Path.Combine(inputPath, $"{inputFileClean}.{configuration.OutputExtension}")),
+
+                ("use dialog", () => WindowsFileDialog.ShowSaveFileDialog("Save as...", $"Gcode (*.{configuration.OutputExtension})", $"*.{configuration.OutputExtension}")));
+
             bool optimizer = Prompt.Confirm("Disable optimizer?", false);
 
-            bool ok =CAM.Run(choosenSettings, inputFile, outputFile, optimizer, out string error);
-            if (!ok)
-                Console.WriteLine($"ERROR: {error}");
-            Console.WriteLine("Bye bye...");
+            return CAM.Run(choosenSettings, inputFile, outputFile, optimizer, out error);
+
+            string GetDefaultOutputName(string name)
+                => File.GetAttributes(configuration.DefaultOutput).HasFlag(FileAttributes.Directory) ?
+                Path.Combine(configuration.DefaultOutput, $"{name}.{configuration.OutputExtension}") :
+                configuration.DefaultOutput;
         }
 
         private bool OpenFile(out string path)
@@ -65,6 +81,7 @@ namespace LaserCam
 
             return run;
         }
+
 
         static T Select<T>(string prompt, params (string, Func<T>)[] actions)
         {
