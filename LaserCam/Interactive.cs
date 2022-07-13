@@ -36,17 +36,14 @@ namespace LaserCam
             }
 
             if (!OpenFile(out string inputFile))
-            {
-                Console.WriteLine("ERROR: No file given");
                 return false;
-            }
+
             string inputFileClean = Path.GetFileNameWithoutExtension(inputFile);
             string inputPath = Path.GetDirectoryName(inputFile);
 
             Console.WriteLine($"File selected: {inputFile}");
             CamSettingsModel choosenSettings = Prompt.Select("Please choose the desired profile", configuration.CamSettings, defaultValue: configuration.CamSettings[0], textSelector: s => s.Name);
             bool optimizer = Prompt.Confirm("Disable travel path optimizer?", false);
-
 
             string outputFile = Select("Choose where to save the gcode",
                 ("configured output", () => PrepareDefaultOutput(inputFileClean)),
@@ -55,10 +52,12 @@ namespace LaserCam
 
                 ("use dialog", () => WindowsFileDialog.ShowSaveFileDialog("Save as...", $"Gcode (*.{configuration.OutputExtension})", $"*.{configuration.OutputExtension}")));
 
+            int start = Environment.TickCount;
             bool ok = CAM.Run(choosenSettings, inputFile, outputFile, optimizer, out string error);
+            int elapsed = Environment.TickCount - start;
 
             if (ok)
-                Console.WriteLine($"Generated toolpath saved in {outputFile}");
+                Console.WriteLine($"Conversion completed, elapsed time: {elapsed}ms\r\nGenerated toolpath saved in {outputFile}");
             else
                 Console.WriteLine($"ERROR: {error}");
 

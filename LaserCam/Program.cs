@@ -4,13 +4,12 @@
 // This program is distributed in the hope that it will be useful, but  WITHOUT ANY WARRANTY; without even the implied warranty of  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GPLv3  General Public License for more details.
 // You should have received a copy of the GNU General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+using System;
 using System.CommandLine;
 using System.CommandLine.Invocation;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.IO;
-using System;
+
 
 namespace LaserCam
 {
@@ -18,9 +17,6 @@ namespace LaserCam
     {
         static void Main(string[] args)
         {
-
-            bool dir = Directory.Exists("C:\\cam\\test.txt");
-            bool file = File.Exists("C:\\cam\\test.txt");
             if (args.Length > 0)
             {
                 RootCommand cmd = new RootCommand
