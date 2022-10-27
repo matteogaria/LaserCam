@@ -10,6 +10,10 @@ using netDxf;
 
 using Geometry.Entities;
 using DxfTools;
+using netDxf.Objects;
+using System.Linq;
+using Geometry.MathUtils;
+using Geometry;
 
 namespace DxfTests
 {
@@ -20,6 +24,43 @@ namespace DxfTests
         static double shift = 0.5;
         static void Main(string[] args)
         {
+
+            var coso = ShapeBuilder.BuildRegularPolygon(4, 10);
+            double n = 5;
+            double r = 6;
+            double centerX = r;
+            double centerY = r / (2 * Math.Tan(Misc.ToRad(180 / n)));
+
+            //double rotation = Misc.ToRad(n % 2 == 0 ? 45 : 90);
+            double rotation = n switch
+            {
+                6 or 10 => 0,
+                _ => Misc.ToRad(n % 2 == 0 ? (180 / n) : 90)
+             };
+             
+            List<double> dataX = new();
+            List<double> dataY = new();
+            for (int i = 0; i < n+1; i++)
+            {
+                double angle = rotation + 2 * Math.PI * i / n;
+                double x = centerX + r * Math.Cos(angle);
+                double y = centerY + r * Math.Sin(angle);
+                dataX.Add(x);
+                dataY.Add(y);
+            }
+        //    dataX.Add(dataX.First());
+        //    dataY.Add(dataY.First());
+
+            var plot = new ScottPlot.Plot(800, 800);
+            plot.AddScatter(dataX.ToArray(), dataY.ToArray());
+            plot.AxisScaleLock(true, ScottPlot.EqualScaleMode.ZoomOut);
+
+            plot.SaveFig("test.png");
+
+            //Console.ReadLine();
+            Environment.Exit(0);
+
+
             var doc = DxfDocument.Load("circle.dxf");
             var result = new DxfDocument();
 

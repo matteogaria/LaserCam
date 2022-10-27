@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="ScottPlot" Version="4.1.58" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\DxfTools\DxfTools.csproj" />
     <ProjectReference Include="..\Geometry\Geometry.csproj" />
   </ItemGroup>
