@@ -24,12 +24,17 @@ namespace DxfTests
         static double shift = 0.5;
         static void Main(string[] args)
         {
-
-            var coso = ShapeBuilder.BuildRegularPolygon(4, 10);
             double n = 5;
             double r = 6;
+            //double centerX = r / (2 * Math.Tan(Misc.ToRad(180 / n)));
+            //double centerY;
+            //if (n % 2 == 0)
+            //    centerY = centerX;
+            //else
+            //    centerY = r;
+
             double centerX = r;
-            double centerY = r / (2 * Math.Tan(Misc.ToRad(180 / n)));
+            double centerY = r;
 
             //double rotation = Misc.ToRad(n % 2 == 0 ? 45 : 90);
             double rotation = n switch

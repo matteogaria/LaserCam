@@ -8,13 +8,20 @@ namespace Geometry
 {
     public class ShapeBuilder
     {
-        public static IEnumerable<GeometryObject> BuildRegularPolygon(double numSides, double radius)
+        public static IEnumerable<GeometryObject> PolygonByLength(int numSides, double length)
         {
-            double centerX = radius;
+            double radius = length / (2 * Math.Sin(Misc.ToRad(180 / numSides)));
+            return PolygonByRadius(numSides, radius);
+        }
+
+        public static IEnumerable<GeometryObject> PolygonByRadius(int numSides, double radius)
+        {
+            double centerX;
             double centerY = radius / (2 * Math.Tan(Misc.ToRad(180 / numSides)));
-            double prevX = 0;
-            double prevY = 0;
-            bool first = true;
+            if (numSides % 2 == 0)
+                centerX = centerY;
+            else
+                centerX = radius;
 
             //double rotation = Misc.ToRad(n % 2 == 0 ? 45 : 90);
             double rotation = numSides switch
@@ -22,6 +29,10 @@ namespace Geometry
                 6 or 10 => 0,
                 _ => Misc.ToRad(numSides % 2 == 0 ? (180 / numSides) : 90)
             };
+
+            double prevX = 0;
+            double prevY = 0;
+            bool first = true;
 
             for (int i = 0; i < numSides + 1; i++)
             {
