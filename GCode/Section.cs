@@ -8,11 +8,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+using Geometry.Entities;
 //using NLog;
 
-namespace Geometry.Entities
+namespace GCode
 {
-    public class ShapeCreationSettings
+    public class SectionSettings
     {
         public string LayerName { get; set; }
         public double PointTolerance { get; set; }
@@ -22,7 +23,7 @@ namespace Geometry.Entities
         public bool Ordered { get; set; }
     }
 
-    public class Shape : List<GeometryObject>
+    public class Section : List<GeometryObject>
     {
         // private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
@@ -33,15 +34,15 @@ namespace Geometry.Entities
         public bool IsOrdered { get; protected set; } = false;
         public bool IsCircleShape { get => this.First().GetType() == typeof(Circle); }
 
-        public Shape Clone()
+        public Section Clone()
         {
-            return new Shape(Tolerance, this);
+            return new Section(Tolerance, this);
         }
 
-        public static IEnumerable<Shape> CreateShapes(IEnumerable<GeometryObject> geometries, IEnumerable<ShapeCreationSettings> settings, bool optimize = true)
+        public static IEnumerable<Section> CreateShapes(IEnumerable<GeometryObject> geometries, IEnumerable<SectionSettings> settings, bool optimize = true)
         {
             var layers = geometries.GroupBy(geo => geo.RefName).Select(group => group.ToList()).ToList();
-            List<Shape> retVal = new List<Shape>();
+            List<Section> retVal = new List<Section>();
 
             foreach (var layer in layers)
             {
@@ -61,7 +62,7 @@ namespace Geometry.Entities
 
                 if (currentLayerSettings.SplitGeometries)
                 {
-                    foreach (Shape shape in layerShapes)
+                    foreach (Section shape in layerShapes)
                     {
                         retVal.AddRange(
                             shape.Split(
@@ -108,9 +109,9 @@ namespace Geometry.Entities
             }
         }
 
-        public IEnumerable<Shape> Split(double maxLength, double sectionTolerance, double pointTolerance)
+        public IEnumerable<Section> Split(double maxLength, double sectionTolerance, double pointTolerance)
         {
-            List<Shape> result = new();
+            List<Section> result = new();
 
             //circles are managed separately
             if (IsCircleShape)
@@ -119,19 +120,19 @@ namespace Geometry.Entities
                 return result;
             }
 
-            int sections = (int)(Math.Ceiling(Perimeter / maxLength));
-            double sectionLen = Math.Ceiling((Perimeter / sections));
+            int sections = (int)Math.Ceiling(Perimeter / maxLength);
+            double sectionLen = Math.Ceiling(Perimeter / sections);
 
-            Shape input = Clone();
+            Section input = Clone();
 
             double remainingSectionLen = sectionLen;
-            Shape currentSection = new(Tolerance, null);
+            Section currentSection = new(Tolerance, null);
             while (input.Count > 0)
             {
                 GeometryObject geometry = input.First();
                 input.Remove(geometry);
 
-                if (geometry.Length <= (remainingSectionLen + sectionTolerance))
+                if (geometry.Length <= remainingSectionLen + sectionTolerance)
                 {
                     currentSection.Add(geometry);
                     remainingSectionLen -= geometry.Length;
@@ -155,9 +156,9 @@ namespace Geometry.Entities
             return result;
         }
 
-        public static void Optimize(List<Shape> shapes, PointXY startPoint)
+        public static void Optimize(List<Section> shapes, PointXY startPoint)
         {
-            List<Shape> input = new();
+            List<Section> input = new();
             input.AddRange(shapes);
 
             PointXY reference = startPoint;
@@ -179,7 +180,7 @@ namespace Geometry.Entities
 
         }
 
-        public static IEnumerable<Shape> Nearest(IEnumerable<Shape> shapes, PointXY reference, out PointXY nearestPoint)
+        public static IEnumerable<Section> Nearest(IEnumerable<Section> shapes, PointXY reference, out PointXY nearestPoint)
         {
             List<PointXY> points = shapes.SelectMany(s => new[] { s.StartPoint, s.EndPoint }).ToList();
 
@@ -200,14 +201,14 @@ namespace Geometry.Entities
             return result;
         }
 
-        protected Shape(double tolerance, IEnumerable<GeometryObject> geometries)
+        protected Section(double tolerance, IEnumerable<GeometryObject> geometries)
         {
             Tolerance = tolerance;
             if (geometries != null)
                 AddRange(geometries);
         }
 
-        private static IEnumerable<Shape> CreateSingleLayerShapes(IEnumerable<GeometryObject> geometries, double tolerance, bool ordered)
+        private static IEnumerable<Section> CreateSingleLayerShapes(IEnumerable<GeometryObject> geometries, double tolerance, bool ordered)
         {
             // int skippedGeometries = geometries.Where(g => g.Length <= tolerance).Count();
             // if (skippedGeometries > 0)
@@ -216,12 +217,12 @@ namespace Geometry.Entities
             List<GeometryObject> input = geometries.Where(g => g.Length > tolerance && g.GetType() != typeof(Circle)).ToList();
             List<GeometryObject> circles = geometries.Where(g => g.Length > tolerance && g.GetType() == typeof(Circle)).ToList();
 
-            List<Shape> shapes = new List<Shape>();
+            List<Section> shapes = new List<Section>();
             // circles are closed objects by definition, so every single circles defines a shape
-            shapes.AddRange(circles.Select(c => new Shape(tolerance, new[] { c })));
+            shapes.AddRange(circles.Select(c => new Section(tolerance, new[] { c })));
 
             GeometryObject lastGeometry = null;
-            Shape s = null;
+            Section s = null;
             bool toAdd = false;
 
             while (input.Count() > 0)
@@ -229,7 +230,7 @@ namespace Geometry.Entities
                 // first geometry in shape  -> always add
                 if (lastGeometry == null)
                 {
-                    s = new Shape(tolerance, null);
+                    s = new Section(tolerance, null);
                     GeometryObject geometry = input.First();
                     s.Add(geometry);
                     lastGeometry = geometry;
@@ -266,18 +267,18 @@ namespace Geometry.Entities
             return shapes;
         }
 
-        private static IEnumerable<Shape> SplitCircle(Circle circle, double maxLength, double pointTolerance)
+        private static IEnumerable<Section> SplitCircle(Circle circle, double maxLength, double pointTolerance)
         {
-            List<Shape> result = new();
+            List<Section> result = new();
             var splitted = circle.SplitToArcs(maxLength);
 
             if (splitted.Count() == 0)
             {
-                result.Add(new Shape(pointTolerance, new[] { circle }));
+                result.Add(new Section(pointTolerance, new[] { circle }));
             }
             else
             {
-                result.AddRange(splitted.Select(s => new Shape(pointTolerance, new[] { s })));
+                result.AddRange(splitted.Select(s => new Section(pointTolerance, new[] { s })));
             }
 
             return result;

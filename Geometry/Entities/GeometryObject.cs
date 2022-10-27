@@ -8,7 +8,7 @@ namespace Geometry.Entities
 {
     public abstract class GeometryObject
     {
-        public string RefName { get; set; }
+        public string RefName { get; }
         public PointXY StartPoint { get => GetStartPoint(); }
         public PointXY EndPoint { get => GetEndPoint(); }
 

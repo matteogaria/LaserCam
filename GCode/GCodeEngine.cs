@@ -34,9 +34,9 @@ namespace GCode
 
         private List<GCodeObject> generatedGCode = new();
 
-        public void Run(IEnumerable<Shape> shapes, StringBuilder sb)
+        public void Run(IEnumerable<Section> shapes, StringBuilder sb)
         {
-            foreach (Shape s in shapes)
+            foreach (Section s in shapes)
                 BuildShape(s, sb);
 
             BuildLaser(LaserMode.Off, 0);
@@ -51,7 +51,7 @@ namespace GCode
             Console.WriteLine($"Rapid move lenght: {totalRapidMoveDistance:N3}");
         }
 
-        private void BuildShape(Shape shape, StringBuilder sb)
+        private void BuildShape(Section shape, StringBuilder sb)
         {
             GCodeLayerSettings settings = LoadCurrentShapeSettings(shape);
             if (settings == null)
@@ -81,16 +81,16 @@ namespace GCode
             }
         }
 
-        private GCodeLayerSettings LoadCurrentShapeSettings(Shape shape)
+        private GCodeLayerSettings LoadCurrentShapeSettings(Section shape)
         {
             //TODO: create into shape object a proper settings property
             var settings = layerSettings.Where(s => s.RefName == shape.First().RefName).SingleOrDefault();
             return settings;
         }
 
-        private void BuildSinglePass(Shape s, GCodeLayerSettings settings, bool reverse, StringBuilder sb)
+        private void BuildSinglePass(Section s, GCodeLayerSettings settings, bool reverse, StringBuilder sb)
         {
-            Shape input = s.Clone();
+            Section input = s.Clone();
 
             while (input.Count > 0)
             {

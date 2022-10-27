@@ -26,7 +26,7 @@ namespace LaserCam
                 return false;
 
             IEnumerable<GeometryObject> geometries = dxf.Parse();
-            IEnumerable<Shape> shapes = Shape.CreateShapes(geometries, settings.GetShapeSettings(), !disableOptimizer).ToList();
+            IEnumerable<Section> shapes = Section.CreateShapes(geometries, settings.GetShapeSettings(), !disableOptimizer).ToList();
             GCodeEngine engine = new GCodeEngine(settings.GetGCodeSettings());
 
             StringBuilder sb = new();

@@ -11,7 +11,7 @@ using System.Linq;
 using System.Collections.Generic;
 
 using GCode.Models;
-using Geometry.Entities;
+using GCode;
 
 namespace LaserCam
 {
@@ -77,9 +77,9 @@ namespace LaserCam
             };
         }
 
-        public IEnumerable<ShapeCreationSettings> GetShapeSettings()
+        public IEnumerable<SectionSettings> GetShapeSettings()
         {
-            return Parameters.Select(p => new ShapeCreationSettings
+            return Parameters.Select(p => new SectionSettings
             {
                 LayerName = p.Layer,
                 SplitGeometries = p.SplitGeometries,
