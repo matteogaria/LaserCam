@@ -46,13 +46,13 @@ namespace Geometry.Entities
             IsCW = isCW;
 
             TotalAngle = Math.Abs(endAngle - startAngle);
-            if(isCW && startAngle < endAngle || !isCW && startAngle > endAngle)
+            if (isCW && startAngle < endAngle || !isCW && startAngle > endAngle)
                 TotalAngle = 360 - TotalAngle;
 
             length = 2 * Math.PI * Radius * (TotalAngle) / 360;
 
-            startPoint = PointXY.MovePoint(center, MathUtils.Misc.ToRad(startAngle), radius);
-            endPoint = PointXY.MovePoint(center, MathUtils.Misc.ToRad(endAngle), radius);
+            startPoint = center.Move(MathUtils.Misc.ToRad(startAngle), radius);
+            endPoint = center.Move(MathUtils.Misc.ToRad(endAngle), radius);
         }
         public override PointXY GetStartPoint() => startPoint;
         public override PointXY GetEndPoint() => endPoint;

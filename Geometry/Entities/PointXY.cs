@@ -5,13 +5,14 @@
 // You should have received a copy of the GNU General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System;
+using System.Drawing;
 
 namespace Geometry.Entities
 {
-    public class PointXY
+    public struct PointXY
     {
-        public double X { get; set; }
-        public double Y { get; set; }
+        public double X { get; }
+        public double Y { get; }
         public double DistanceFromOrigin => MathUtils.Triangle.Hypotenuse(X, Y);
 
         public PointXY(double x, double y)
@@ -20,36 +21,13 @@ namespace Geometry.Entities
             Y = y;
         }
 
-        public PointXY Normalize(double tolerance)
-        {
-            if (Math.Abs(X) < tolerance)
-                X = 0;
-            if (Math.Abs(Y) < tolerance)
-                Y = 0;
-
-            return this;
-        }
-
-        public void Move(double directionRad, double distance)
-        {
-            X += distance * Math.Cos(directionRad);
-            Y += distance * Math.Sin(directionRad);
-        }
+        public static PointXY InvalidPoint => new PointXY(double.NaN, double.NaN);
 
         public static bool IsSamePoint(PointXY a, PointXY b, double tolerance)
             => MathUtils.Misc.CompareDouble(a.X, b.X, tolerance) && MathUtils.Misc.CompareDouble(a.Y, b.Y, tolerance);
 
         public static double Distance(PointXY a, PointXY b)
             => MathUtils.Triangle.Hypotenuse(a.X - b.X, a.Y - b.Y);
-
-        public static PointXY MovePoint(PointXY point, double directionRad, double distance)
-        {
-            double x = point.X + distance * Math.Cos(directionRad);
-            double y = point.Y + distance * Math.Sin(directionRad);
-            PointXY retVal = new PointXY(x, y);
-
-            return retVal;
-        }
 
         public static bool operator ==(PointXY a, PointXY b)
             => a.X == b.X && a.Y == b.Y;
@@ -59,6 +37,26 @@ namespace Geometry.Entities
         public override string ToString()
         {
             return $"X:{X} Y:{Y}";
+        }
+    }
+
+    public static class PointExtensions
+    {
+        public static PointXY Zero(this PointXY p, double tolerance)
+        {
+            double x = Math.Abs(p.X) < tolerance ? 0 : p.X;
+            double y = Math.Abs(p.Y) < tolerance ? 0 : p.Y;
+            return new PointXY(x, y);
+        }
+
+        public static PointXY Offset(this PointXY p, double x, double y)
+            => new PointXY(p.X + x, p.Y + y);
+
+        public static PointXY Move(this PointXY p, double directionRad, double distance)
+        {
+            double x = p.X + distance * Math.Cos(directionRad);
+            double y = p.Y + distance * Math.Sin(directionRad);
+            return new PointXY(x, y);
         }
     }
 }

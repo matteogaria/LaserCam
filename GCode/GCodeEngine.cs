@@ -115,7 +115,7 @@ namespace GCode
         {
             //TODO: implementation of check if a point is on the circumference
             //to optimize travels
-            PointXY startPoint = PointXY.MovePoint(circle.Center, 0, circle.Radius);
+            PointXY startPoint = circle.Center.Move( 0, circle.Radius);
 
             if (!PointXY.IsSamePoint(currentPosition, startPoint, settings.PointTolerance))
                 BuildRapidMove(startPoint);

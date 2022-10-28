@@ -35,7 +35,7 @@ namespace Geometry.Entities
             Circumference = 2 * Math.PI * radius;
         }
 
-        public override PointXY GetStartPoint() => PointXY.MovePoint(Center, 0, Radius);
+        public override PointXY GetStartPoint() => Center.Move( 0, Radius);
 
         public override PointXY GetEndPoint() => GetStartPoint();
         

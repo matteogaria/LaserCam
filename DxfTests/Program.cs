@@ -26,35 +26,29 @@ namespace DxfTests
         {
             double n = 5;
             double r = 6;
-            //double centerX = r / (2 * Math.Tan(Misc.ToRad(180 / n)));
-            //double centerY;
-            //if (n % 2 == 0)
-            //    centerY = centerX;
-            //else
-            //    centerY = r;
 
-            double centerX = r;
-            double centerY = r;
-
-            //double rotation = Misc.ToRad(n % 2 == 0 ? 45 : 90);
             double rotation = n switch
             {
                 6 or 10 => 0,
                 _ => Misc.ToRad(n % 2 == 0 ? (180 / n) : 90)
-             };
-             
+            };
+
             List<double> dataX = new();
             List<double> dataY = new();
-            for (int i = 0; i < n+1; i++)
+            for (int i = 0; i < n + 1; i++)
             {
                 double angle = rotation + 2 * Math.PI * i / n;
-                double x = centerX + r * Math.Cos(angle);
-                double y = centerY + r * Math.Sin(angle);
+                double x = r * Math.Cos(angle);
+                double y = r * Math.Sin(angle);
                 dataX.Add(x);
                 dataY.Add(y);
             }
-        //    dataX.Add(dataX.First());
-        //    dataY.Add(dataY.First());
+
+            double xmin = Math.Abs(dataX.Min());
+            double ymin = Math.Abs(dataY.Min());
+
+            dataX = dataX.Select(x => x + xmin).ToList();
+            dataY = dataY.Select(y => y + ymin).ToList();
 
             var plot = new ScottPlot.Plot(800, 800);
             plot.AddScatter(dataX.ToArray(), dataY.ToArray());
@@ -111,13 +105,13 @@ namespace DxfTests
                 PointXY newEndPoint;
                 if (line.StartPoint.X <= line.EndPoint.X)
                 {
-                    newStartPoint = PointXY.MovePoint(line.StartPoint, line.AngleRad, shift);
-                    newEndPoint = PointXY.MovePoint(line.EndPoint, line.AngleRad, -shift);
+                    newStartPoint = line.StartPoint.Move(line.AngleRad, shift);
+                    newEndPoint = line.EndPoint.Move(line.AngleRad, -shift);
                 }
                 else
                 {
-                    newStartPoint = PointXY.MovePoint(line.StartPoint, line.AngleRad, -shift);
-                    newEndPoint = PointXY.MovePoint(line.EndPoint, line.AngleRad, shift);
+                    newStartPoint = line.StartPoint.Move(line.AngleRad, -shift);
+                    newEndPoint = line.EndPoint.Move(line.AngleRad, shift);
                 }
 
                 dxfLines.Add(new netDxf.Entities.Line(newStartPoint.ToVector(), newEndPoint.ToVector()));

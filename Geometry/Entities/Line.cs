@@ -79,9 +79,9 @@ namespace Geometry.Entities
             PointXY point;
 
             if (StartPoint.X <= EndPoint.X)
-                point = PointXY.MovePoint(StartPoint, AngleRad, length).Normalize(tolerance);
+                point = StartPoint.Move(AngleRad, length).Zero(tolerance);
             else
-                point = PointXY.MovePoint(StartPoint, AngleRad, -length).Normalize(tolerance);
+                point = StartPoint.Move(AngleRad, -length).Zero(tolerance);
 
             lines.Add(new Line(StartPoint, point, this));
             lines.Add(new Line(point, EndPoint, this));

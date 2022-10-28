@@ -184,7 +184,7 @@ namespace GCode
         {
             List<PointXY> points = shapes.SelectMany(s => new[] { s.StartPoint, s.EndPoint }).ToList();
 
-            PointXY candidate = null;
+            PointXY candidate = PointXY.InvalidPoint;
             double lastdistance = double.PositiveInfinity;
             foreach (PointXY point in points)
             {
