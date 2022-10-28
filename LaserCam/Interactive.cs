@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-
+using Geometry;
 using Sharprompt;
 
 namespace LaserCam
@@ -35,6 +35,53 @@ namespace LaserCam
                 return false;
             }
 
+            return Select<bool>("Choose an operation",
+                ("load Dxf", RunFileInteractive),
+                ("generate a shape", GenerateShape));
+        }
+
+        public bool GenerateShape()
+        {
+            int sides = Prompt.Input<int>("Number of sides", 3);
+            double len = Prompt.Input<double>("Length", 10.0);
+
+            CamSettingsModel choosenSettings = Prompt.Select("Please choose the desired profile", configuration.CamSettings, defaultValue: configuration.CamSettings[0], textSelector: s => s.Name);
+
+            string layerName = Prompt.Select("Please choose the layer name from the profile", choosenSettings.Parameters.Select(p => p.Layer));
+            bool optimizer = Prompt.Confirm("Disable travel path optimizer?", false);
+            string outputFile = Select("Choose where to save the gcode",
+                ("configured output", () => PrepareDefaultOutput("polygon")),
+                ("use dialog", () => WindowsFileDialog.ShowSaveFileDialog("Save as...", $"Gcode (*.{configuration.OutputExtension})", $"*.{configuration.OutputExtension}")));
+
+            var polygon = ShapeBuilder.PolygonByLength(sides, len, layerName);
+
+            int start = Environment.TickCount;
+            bool ok = CAM.Run(choosenSettings, polygon, outputFile, optimizer, out string error);
+            int elapsed = Environment.TickCount - start;
+
+            if (ok)
+                Console.WriteLine($"Conversion completed, elapsed time: {elapsed}ms\r\nGenerated toolpath saved in {outputFile}");
+            else
+                Console.WriteLine($"ERROR: {error}");
+
+            return ok;
+
+            string PrepareDefaultOutput(string name)
+            {
+                string path = Path.HasExtension(configuration.DefaultOutput) ?
+                configuration.DefaultOutput :
+                Path.Combine(configuration.DefaultOutput, $"{name}.{configuration.OutputExtension}");
+
+                string dir = Path.GetDirectoryName(path);
+                if (!Directory.Exists(dir))
+                    Directory.CreateDirectory(dir);
+
+                return path;
+            }
+        }
+
+        public bool RunFileInteractive()
+        {
             if (!OpenFile(out string inputFile))
                 return false;
 

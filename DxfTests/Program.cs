@@ -24,34 +24,16 @@ namespace DxfTests
         static double shift = 0.5;
         static void Main(string[] args)
         {
-            double n = 5;
+            int n = 5;
             double r = 6;
 
-            double rotation = n switch
-            {
-                6 or 10 => 0,
-                _ => Misc.ToRad(n % 2 == 0 ? (180 / n) : 90)
-            };
+            var polygon = ShapeBuilder.PolygonByRadius(n, r, false);
 
-            List<double> dataX = new();
-            List<double> dataY = new();
-            for (int i = 0; i < n + 1; i++)
-            {
-                double angle = rotation + 2 * Math.PI * i / n;
-                double x = r * Math.Cos(angle);
-                double y = r * Math.Sin(angle);
-                dataX.Add(x);
-                dataY.Add(y);
-            }
 
-            double xmin = Math.Abs(dataX.Min());
-            double ymin = Math.Abs(dataY.Min());
 
-            dataX = dataX.Select(x => x + xmin).ToList();
-            dataY = dataY.Select(y => y + ymin).ToList();
 
             var plot = new ScottPlot.Plot(800, 800);
-            plot.AddScatter(dataX.ToArray(), dataY.ToArray());
+            plot.AddScatter(polygon.Select(p => p.StartPoint.X).ToArray(), polygon.Select(p => p.StartPoint.Y).ToArray());
             plot.AxisScaleLock(true, ScottPlot.EqualScaleMode.ZoomOut);
 
             plot.SaveFig("test.png");
