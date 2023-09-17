@@ -8,12 +8,22 @@
 			"PointTolerance": 0.001,
 			"Parameters": [
 				{
-					"Layer": "0",
+					"Layer": "cut",
 					"SplitGeometries": true,
 					"SectionLength": 30,
 					"SectionTolerance": 5,
-					"FeedRate": 300,
-					"Power": 2500,
+					"FeedRate": 600,
+					"Power": 7500,
+					"Passes": 7,
+					"Mode": "Fixed"
+				},
+				{
+					"Layer": "cut_safe",
+					"SplitGeometries": true,
+					"SectionLength": 80,
+					"SectionTolerance": 5,
+					"FeedRate": 500,
+					"Power": 7500,
 					"Passes": 7,
 					"Mode": "Fixed"
 				},
@@ -22,8 +32,35 @@
 					"SplitGeometries": false,
 					"SectionLength": 0,
 					"SectionTolerance": 0,
-					"FeedRate": 600,
-					"Power": 2500,
+					"FeedRate": 1000,
+					"Power": 5000,
+					"Passes": 1,
+					"Mode": "Dynamic"
+				}
+			]
+		},
+		{
+			"Name": "hardply-fast",
+			"DecimalPlaces": 3,
+			"PointTolerance": 0.001,
+			"Parameters": [
+				{
+					"Layer": "cut",
+					"SplitGeometries": true,
+					"SectionLength": 40,
+					"SectionTolerance": 5,
+					"FeedRate": 500,
+					"Power": 7500,
+					"Passes": 5,
+					"Mode": "Fixed"
+				},
+				{
+					"Layer": "engraving",
+					"SplitGeometries": false,
+					"SectionLength": 0,
+					"SectionTolerance": 0,
+					"FeedRate": 1000,
+					"Power": 5000,
 					"Passes": 1,
 					"Mode": "Dynamic"
 				}
@@ -39,9 +76,9 @@
 					"SplitGeometries": true,
 					"SectionLength": 30,
 					"SectionTolerance": 5,
-					"FeedRate": 450,
-					"Power": 2500,
-					"Passes": 1,
+					"FeedRate": 500,
+					"Power": 7500,
+					"Passes": 5,
 					"Mode": "Fixed"
 				},
 				{
@@ -49,8 +86,79 @@
 					"SplitGeometries": false,
 					"SectionLength": 0,
 					"SectionTolerance": 0,
-					"FeedRate": 800,
-					"Power": 2500,
+					"FeedRate": 1200,
+					"Power": 5000,
+					"Passes": 1,
+					"Mode": "Dynamic"
+				}
+			]
+		},
+		{
+			"Name": "mdf",
+			"DecimalPlaces": 3,
+			"PointTolerance": 0.001,
+			"Parameters": [
+				{
+					"Layer": "cut",
+					"SplitGeometries": true,
+					"SectionLength": 30,
+					"SectionTolerance": 5,
+					"FeedRate": 400,
+					"Power": 7500,
+					"Passes": 7,
+					"Mode": "Fixed"
+				},
+				{
+					"Layer": "engraving",
+					"SplitGeometries": false,
+					"SectionLength": 0,
+					"SectionTolerance": 0,
+					"FeedRate": 1000,
+					"Power": 5000,
+					"Passes": 1,
+					"Mode": "Dynamic"
+				}
+			]
+		},
+		{
+			"Name": "panno",
+			"DecimalPlaces": 3,
+			"PointTolerance": 0.001,
+			"Parameters": [
+				{
+					"Layer": "cut",
+					"SplitGeometries": false,
+					"SectionLength": 0,
+					"SectionTolerance": 0,
+					"FeedRate": 1000,
+					"Power": 3500,
+					"Passes": 1,
+					"Mode": "Dynamic"
+				}
+			]
+		},
+		{
+			"Name": "thin_plastic",
+			"DecimalPlaces": 3,
+			"PointTolerance": 0.001,
+			"Parameters": [
+				{
+					"Layer": "cut",
+					"SplitGeometries": false,
+					"SectionLength": 0,
+					"SectionTolerance": 0,
+					"FeedRate": 500,
+					"Power": 7500,
+					"Passes": 3,
+					"Mode": "Fixed"
+				},
+				{
+					"Layer": "engraving",
+					"SplitGeometries": false,
+					"SectionLength": 0,
+					"SectionTolerance": 0,
+					"FeedRate": 600,
+					"Power": 4500,
 					"Passes": 1,
 					"Mode": "Dynamic"
 				}

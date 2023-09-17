@@ -54,15 +54,15 @@ namespace LaserCam
                 ("use dialog", () => WindowsFileDialog.ShowSaveFileDialog("Save as...", $"Gcode (*.{configuration.OutputExtension})", $"*.{configuration.OutputExtension}")));
 
             var polygon = ShapeBuilder.PolygonByLength(sides, len, layerName);
-
+            string error = null;
             int start = Environment.TickCount;
-            bool ok = CAM.Run(choosenSettings, polygon, outputFile, optimizer, out string error);
+            bool ok = !string.IsNullOrEmpty(outputFile) && CAM.Run(choosenSettings, polygon, outputFile, optimizer, out error);
             int elapsed = Environment.TickCount - start;
 
             if (ok)
                 Console.WriteLine($"Conversion completed, elapsed time: {elapsed}ms\r\nGenerated toolpath saved in {outputFile}");
             else
-                Console.WriteLine($"ERROR: {error}");
+                Console.WriteLine($"ERROR: {error ?? "No output file specified"}");
 
             return ok;
 
