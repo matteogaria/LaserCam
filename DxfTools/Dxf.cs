@@ -54,9 +54,9 @@ namespace DxfTools
             // conversion of all lines in primitive line geometry
             List<GeometryObject> geometries = new();
 
-            geometries.AddRange(LoadLines(doc.Lines));
-            geometries.AddRange(LoadCircles(doc.Circles));
-            geometries.AddRange(LoadArcs(doc.Arcs));
+            geometries.AddRange(LoadLines(doc.Entities.Lines));
+            geometries.AddRange(LoadCircles(doc.Entities.Circles));
+            geometries.AddRange(LoadArcs(doc.Entities.Arcs));
 
             return geometries;
         }

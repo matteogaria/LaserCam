@@ -17,14 +17,14 @@ namespace DxfTools
             List<netDxf.Entities.EntityObject> objectsToAdd = new List<netDxf.Entities.EntityObject>();
             List<netDxf.Entities.EntityObject> objectsToRemove = new List<netDxf.Entities.EntityObject>();
 
-            foreach (var lwpoly in doc.LwPolylines)
+            foreach (var lwpoly in doc.Entities.Polylines2D)
             {
                 objectsToAdd.AddRange(lwpoly.Explode());
                 objectsToRemove.Add(lwpoly);
             }
 
-            doc.RemoveEntity(objectsToRemove);
-            doc.AddEntity(objectsToAdd);
+            doc.Entities.Remove(objectsToRemove);
+            doc.Entities.Add(objectsToAdd);
         }
 
         public static void AddOrClone(this DxfDocument doc, IEnumerable<netDxf.Entities.EntityObject> entities)
@@ -32,9 +32,9 @@ namespace DxfTools
             foreach (var entity in entities)
             {
                 if (entity.Owner == null)
-                    doc.AddEntity(entity);
+                    doc.Entities.Add(entity);
                 else
-                    doc.AddEntity((netDxf.Entities.EntityObject)entity.Clone());
+                    doc.Entities.Add((netDxf.Entities.EntityObject)entity.Clone());
             }
         }
     }

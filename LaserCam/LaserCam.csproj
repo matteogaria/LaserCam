@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<Nullable>disable</Nullable>
 		<Version>0.1.0</Version>
 		<Authors>Matteo Garia</Authors>
@@ -32,8 +32,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="netDxf.netstandard" Version="2.4.0" />
-		<PackageReference Include="Sharprompt" Version="2.4.2" />
+		<PackageReference Include="netDxf.netstandard" Version="3.0.1" />
+		<PackageReference Include="Sharprompt" Version="3.0.0-preview4" />
 		<PackageReference Include="System.CommandLine" Version="2.0.0-beta1.20574.7" />
 	</ItemGroup>
 

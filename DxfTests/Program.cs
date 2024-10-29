@@ -27,20 +27,7 @@ namespace DxfTests
             int n = 5;
             double r = 6;
 
-            var polygon = ShapeBuilder.PolygonByRadius(n, r, false);
-
-
-
-
-            var plot = new ScottPlot.Plot(800, 800);
-            plot.AddScatter(polygon.Select(p => p.StartPoint.X).ToArray(), polygon.Select(p => p.StartPoint.Y).ToArray());
-            plot.AxisScaleLock(true, ScottPlot.EqualScaleMode.ZoomOut);
-
-            plot.SaveFig("test.png");
-
-            //Console.ReadLine();
-            Environment.Exit(0);
-
+            var polygon = ShapeBuilder.PolygonByRadius(n, r, false, "a");
 
             var doc = DxfDocument.Load("circle.dxf");
             var result = new DxfDocument();
@@ -118,8 +105,8 @@ namespace DxfTests
             //result.AddOrClone(dxfArcs);
 
             //copy of other objects from original doc
-            result.AddOrClone(doc.Arcs);
-            result.AddOrClone(doc.Circles);
+            result.AddOrClone(doc.Entities.Arcs);
+            result.AddOrClone(doc.Entities.Circles);
 
             result.Save("result.dxf");
             Console.WriteLine("Operazione completata!");
